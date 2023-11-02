@@ -46,9 +46,9 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Andrew's Drive", group="Robot")
+@TeleOp(name="POV DRIVE with the not the thing ", group="Robot")
 //@Disabled
-public class AndrewDrive extends LinearOpMode {
+public class NoThing extends LinearOpMode {
 
     /* Declare OpMode members. */
     public DcMotor  leftDrive   = null;
@@ -76,9 +76,9 @@ public class AndrewDrive extends LinearOpMode {
         boolean launch;
 
         // Define and Initialize Motors
-        leftDrive  = hardwareMap.get(DcMotor.class, "leftMotor");
-        rightDrive = hardwareMap.get(DcMotor.class, "rightMotor");
-        launchMotor = hardwareMap.get(DcMotor.class, "launch_motor");
+        leftDrive  = hardwareMap.get(DcMotor.class, "left_Front");
+        rightDrive = hardwareMap.get(DcMotor.class, "right_Front");
+        //launchMotor = hardwareMap.get(DcMotor.class, "launch_motor");
        // leftArm    = hardwareMap.get(DcMotor.class, "left_arm");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
@@ -87,7 +87,7 @@ public class AndrewDrive extends LinearOpMode {
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
         rightDrive.setDirection(DcMotor.Direction.FORWARD);
 
-        launchMotor.setDirection(DcMotor.Direction.FORWARD);
+        //launchMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // If there are encoders connected, switch to RUN_USING_ENCODER mode for greater accuracy
         // leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -112,8 +112,8 @@ public class AndrewDrive extends LinearOpMode {
             // Run wheels in POV mode (note: The joystick goes negative when pushed forward, so negate it)
             // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
             // This way it's also easy to just drive straight, or just turn.
-            drive = gamepad1.right_trigger - gamepad2.left_trigger;
-            turn  =  gamepad1.left_stick_x;
+            drive = gamepad1.right_stick_y;
+            turn  =  gamepad1.right_stick_x;
 
             launch = gamepad1.a;
 
@@ -132,7 +132,7 @@ public class AndrewDrive extends LinearOpMode {
             // Output the safe vales to the motor drives.
             leftDrive.setPower(left);
             rightDrive.setPower(right);
-            launchMotor.setPower(launch ? 1 : 0);
+            //launchMotor.setPower(launch ? 1 : 0);
 
             // Use gamepad left & right Bumpers to open and close the claw
 //            if (gamepad1.right_bumper)
