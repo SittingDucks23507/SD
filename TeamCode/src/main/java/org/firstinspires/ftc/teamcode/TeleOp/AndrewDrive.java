@@ -48,13 +48,14 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="POV DRIVE ", group="Robot")
+@TeleOp(name="Andrew's Drive", group="Robot")
 //@Disabled
 public class RobotTeleopPOV_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
     public DcMotor  leftDrive   = null;
     public DcMotor  rightDrive  = null;
+    public DcMotor launchMotor = null;
     public DcMotor  leftArm     = null;
     public Servo    leftClaw    = null;
     public Servo    rightClaw   = null;
@@ -74,9 +75,12 @@ public class RobotTeleopPOV_Linear extends LinearOpMode {
         double turn;
         double max;
 
+        boolean launch;
+
         // Define and Initialize Motors
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_Front");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_Front");
+        leftDrive  = hardwareMap.get(DcMotor.class, "leftMotor");
+        rightDrive = hardwareMap.get(DcMotor.class, "rightMotor");
+        launchMotor = hardwareMap.get(DcMotor.class, "launch_motor");
        // leftArm    = hardwareMap.get(DcMotor.class, "left_arm");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
@@ -84,6 +88,8 @@ public class RobotTeleopPOV_Linear extends LinearOpMode {
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
         rightDrive.setDirection(DcMotor.Direction.FORWARD);
+
+        launchMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // If there are encoders connected, switch to RUN_USING_ENCODER mode for greater accuracy
         // leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -108,8 +114,10 @@ public class RobotTeleopPOV_Linear extends LinearOpMode {
             // Run wheels in POV mode (note: The joystick goes negative when pushed forward, so negate it)
             // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
             // This way it's also easy to just drive straight, or just turn.
-            drive = -gamepad1.left_stick_y;
-            turn  =  gamepad1.right_stick_x;
+            drive =  -gamepad1.left_stick_y;
+            turn  =  gamepad1.left_stick_x;
+
+            launch = gamepad1.a;
 
             // Combine drive and turn for blended motion.
             left  = drive + turn;
@@ -126,6 +134,7 @@ public class RobotTeleopPOV_Linear extends LinearOpMode {
             // Output the safe vales to the motor drives.
             leftDrive.setPower(left);
             rightDrive.setPower(right);
+            launchMotor.setPower(launch ? 1 : 0);
 
             // Use gamepad left & right Bumpers to open and close the claw
 //            if (gamepad1.right_bumper)
@@ -136,7 +145,7 @@ public class RobotTeleopPOV_Linear extends LinearOpMode {
 //            // Move both servos to new position.  Assume servos are mirror image of each other.
 //            clawOffset = Range.clip(clawOffset, -0.5, 0.5);
 //            leftClaw.setPosition(MID_SERVO + clawOffset);
-//            rightClaw.setPosition(MID_SERVO - clawOffset);
+//            rightgClaw.setPosition(MID_SERVO - clawOffset);
 //
 //            // Use gamepad buttons to move arm up (Y) and down (A)
 //            if (gamepad1.y)
@@ -150,6 +159,7 @@ public class RobotTeleopPOV_Linear extends LinearOpMode {
             telemetry.addData("claw",  "Offset = %.2f", clawOffset);
             telemetry.addData("left",  "%.2f", left);
             telemetry.addData("right", "%.2f", right);
+            telemetry.addData("launcher", "%s", launch ? "activated" : "deactivated");
             telemetry.update();
 
             // Pace this loop so jaw action is reasonable speed.
