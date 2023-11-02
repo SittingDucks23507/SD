@@ -112,7 +112,7 @@ public class AndrewDrive extends LinearOpMode {
             // Run wheels in POV mode (note: The joystick goes negative when pushed forward, so negate it)
             // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
             // This way it's also easy to just drive straight, or just turn.
-            drive = gamepad1.right_trigger - gamepad2.left_trigger;
+            drive = gamepad1.right_trigger - gamepad1.left_trigger;
             turn  =  gamepad1.left_stick_x;
 
             launch = gamepad1.a;
