@@ -1,13 +1,9 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import  org.firstinspires.ftc.teamcode.Auto.MoveByEncoder;
-import org.firstinspires.ftc.teamcode.Auto.Test;
 
 @Autonomous(name="turn 90° right", group="test")
 public class TurnRight extends LinearOpMode {
@@ -22,7 +18,7 @@ public class TurnRight extends LinearOpMode {
 	leftDrive  = hardwareMap.get(DcMotor.class, "leftMotor");
 	rightDrive = hardwareMap.get(DcMotor.class, "rightMotor");
 
-	MoveByEncoder.encoderDrive(1, 12, -12, 5.0,
-				   leftDrive, rightDrive);
+	MoveByEncoder.encoderTurn(0.5, 90, 5,
+			leftDrive, rightDrive);
     }
 }
