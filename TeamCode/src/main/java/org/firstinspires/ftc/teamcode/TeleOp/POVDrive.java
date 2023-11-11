@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -46,24 +47,17 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Marlin's Drive", group="Robot")
+@TeleOp(name="Marlin & Liam's Drive", group="Robot")
 //@Disabled
 public class POVDrive extends LinearOpMode {
 
     /* Declare OpMode members. */
-    public DcMotor  leftDrive   = null;
-    public DcMotor  rightDrive  = null;
-    public DcMotor launchMotor = null;
-    public DcMotor  leftArm     = null;
-    public Servo    leftClaw    = null;
-    public Servo    rightClaw   = null;
+    public DcMotor  leftDrive;
+    public DcMotor  rightDrive;
+    public DcMotor launchMotor;
 
-    double clawOffset = 0;
+    public CRServo droneServo;
 
-    public static final double MID_SERVO   =  0.5 ;
-    public static final double CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
-    public static final double ARM_UP_POWER    =  0.45 ;
-    public static final double ARM_DOWN_POWER  = -0.45 ;
 
     @Override
     public void runOpMode() {
@@ -79,6 +73,7 @@ public class POVDrive extends LinearOpMode {
         leftDrive  = hardwareMap.get(DcMotor.class, "leftMotor");
         rightDrive = hardwareMap.get(DcMotor.class, "rightMotor");
         launchMotor = hardwareMap.get(DcMotor.class, "launch_motor");
+        droneServo = hardwareMap.get(CRServo.class, "drone_servo");
        // leftArm    = hardwareMap.get(DcMotor.class, "left_arm");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
@@ -115,7 +110,8 @@ public class POVDrive extends LinearOpMode {
             drive = -gamepad1.left_stick_y;
             turn  =  gamepad1.right_stick_x;
 
-            launch = gamepad1.a;
+            launch = gamepad1.b;
+            droneServo.setPower(gamepad1.y ? -1 : 0);
 
             // Combine drive and turn for blended motion.
             left  = drive + turn;
@@ -130,9 +126,9 @@ public class POVDrive extends LinearOpMode {
             }
 
             // Output the safe vales to the motor drives.
-            leftDrive.setPower(left);
-            rightDrive.setPower(right);
-            launchMotor.setPower(launch ? 1 : 0);
+            leftDrive.setPower(left * .75);
+            rightDrive.setPower(right * .75);
+            launchMotor.setPower(launch ? .5 : 0);
 
             // Use gamepad left & right Bumpers to open and close the claw
 //            if (gamepad1.right_bumper)
@@ -154,7 +150,6 @@ public class POVDrive extends LinearOpMode {
 //                leftArm.setPower(0.0);
 
             // Send telemetry message to signify robot running;
-            telemetry.addData("claw",  "Offset = %.2f", clawOffset);
             telemetry.addData("left",  "%.2f", left);
             telemetry.addData("right", "%.2f", right);
             telemetry.addData("launcher", "%s", launch ? "activated" : "deactivated");

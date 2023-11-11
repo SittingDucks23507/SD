@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -51,19 +52,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class AndrewDrive extends LinearOpMode {
 
     /* Declare OpMode members. */
-    public DcMotor  leftDrive   = null;
-    public DcMotor  rightDrive  = null;
-    public DcMotor launchMotor = null;
-    public DcMotor  leftArm     = null;
-    public Servo    leftClaw    = null;
-    public Servo    rightClaw   = null;
+    public DcMotor  leftDrive;
+    public DcMotor  rightDrive;
+    public DcMotor launchMotor;
+
+    public CRServo droneServo;
 
     double clawOffset = 0;
-
-    public static final double MID_SERVO   =  0.5 ;
-    public static final double CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
-    public static final double ARM_UP_POWER    =  0.45 ;
-    public static final double ARM_DOWN_POWER  = -0.45 ;
 
     @Override
     public void runOpMode() {
@@ -79,7 +74,7 @@ public class AndrewDrive extends LinearOpMode {
         leftDrive  = hardwareMap.get(DcMotor.class, "leftMotor");
         rightDrive = hardwareMap.get(DcMotor.class, "rightMotor");
         launchMotor = hardwareMap.get(DcMotor.class, "launch_motor");
-       // leftArm    = hardwareMap.get(DcMotor.class, "left_arm");
+        droneServo = hardwareMap.get(CRServo.class, "drone_servo");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
@@ -89,33 +84,15 @@ public class AndrewDrive extends LinearOpMode {
 
         launchMotor.setDirection(DcMotor.Direction.FORWARD);
 
-        // If there are encoders connected, switch to RUN_USING_ENCODER mode for greater accuracy
-        // leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        // rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        // Define and initialize ALL installed servos.
-//        leftClaw  = hardwareMap.get(Servo.class, "left_hand");
-//        rightClaw = hardwareMap.get(Servo.class, "right_hand");
-//        leftClaw.setPosition(MID_SERVO);
-//        rightClaw.setPosition(MID_SERVO);
-//
-//        // Send telemetry message to signify robot waiting;
-//        telemetry.addData(">", "Robot Ready.  Press Play.");    //
-//        telemetry.update();
-
-        // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-
-            // Run wheels in POV mode (note: The joystick goes negative when pushed forward, so negate it)
-            // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
-            // This way it's also easy to just drive straight, or just turn.
             drive = gamepad1.right_trigger - gamepad1.left_trigger;
             turn  =  gamepad1.left_stick_x;
 
-            launch = gamepad1.a;
+            launch = gamepad1.b;
+            droneServo.setPower(gamepad1.y ? -1 : 0);
 
             // Combine drive and turn for blended motion.
             left  = drive + turn;
@@ -130,34 +107,16 @@ public class AndrewDrive extends LinearOpMode {
             }
 
             // Output the safe vales to the motor drives.
-            leftDrive.setPower(left);
-            rightDrive.setPower(right);
-            launchMotor.setPower(launch ? 1 : 0);
-
-            // Use gamepad left & right Bumpers to open and close the claw
-//            if (gamepad1.right_bumper)
-//                clawOffset += CLAW_SPEED;
-//            else if (gamepad1.left_bumper)
-//                clawOffset -= CLAW_SPEED;
-//
-//            // Move both servos to new position.  Assume servos are mirror image of each other.
-//            clawOffset = Range.clip(clawOffset, -0.5, 0.5);
-//            leftClaw.setPosition(MID_SERVO + clawOffset);
-//            rightgClaw.setPosition(MID_SERVO - clawOffset);
-//
-//            // Use gamepad buttons to move arm up (Y) and down (A)
-//            if (gamepad1.y)
-//                leftArm.setPower(ARM_UP_POWER);
-//            else if (gamepad1.a)
-//                leftArm.setPower(ARM_DOWN_POWER);
-//            else
-//                leftArm.setPower(0.0);
+            leftDrive.setPower(left * .75);
+            rightDrive.setPower(right * .75);
+            launchMotor.setPower(launch ? .5 : 0);
 
             // Send telemetry message to signify robot running;
             telemetry.addData("claw",  "Offset = %.2f", clawOffset);
             telemetry.addData("left",  "%.2f", left);
             telemetry.addData("right", "%.2f", right);
             telemetry.addData("launcher", "%s", launch ? "activated" : "deactivated");
+            telemetry.addData("drone_servo", droneServo.getPower());
             telemetry.update();
 
             // Pace this loop so jaw action is reasonable speed.

@@ -81,7 +81,7 @@ public class MoveByEncoder {
      *  3) Driver stops the opmode running.
      */
     public static void encoderDrive(double speed,
-				    double leftInches, double rightInches,
+				    double inches,
 				    double timeoutS,
 				    DcMotor leftDrive, DcMotor rightDrive) {
         int newLeftTarget;
@@ -92,8 +92,8 @@ public class MoveByEncoder {
         // Ensure that the opmode is still active
 
 	// Determine new target position, and pass to motor controller
-	newLeftTarget = leftDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-	newRightTarget = rightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+	newLeftTarget = leftDrive.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
+	newRightTarget = rightDrive.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
 	leftDrive.setTargetPosition(newLeftTarget);
 	rightDrive.setTargetPosition(newRightTarget);
 
@@ -145,13 +145,9 @@ public class MoveByEncoder {
 		// Ensure that the opmode is still active
 
 		// Determine new target position, and pass to motor controller
-		/*
-		Length of an arc:
-		L(cm) = r(cm) * θ(radians)
-		 */
-		newLeftTarget = leftDrive.getCurrentPosition() + (int)(4 * (degrees * Math.PI / 180)); // Radius converted to cm
-		newRightTarget = rightDrive.getCurrentPosition() - (int)(4 * (degrees * Math.PI / 180)); // Radius converted to cm
-		leftDrive.setTargetPosition(newLeftTarget);
+		// newLeftTarget = leftDrive.getCurrentPosition() + (int)((9 * (degrees * Math.PI / 180)) * COUNTS_PER_INCH);
+		newRightTarget = rightDrive.getCurrentPosition() + (int)((9 * (degrees * Math.PI / 180)) * COUNTS_PER_INCH);
+		// leftDrive.setTargetPosition(newLeftTarget);
 		rightDrive.setTargetPosition(newRightTarget);
 
 		// Turn On RUN_TO_POSITION
