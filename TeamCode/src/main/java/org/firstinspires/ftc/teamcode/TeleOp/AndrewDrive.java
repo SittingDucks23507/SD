@@ -109,7 +109,7 @@ public class AndrewDrive extends LinearOpMode {
             // Output the safe vales to the motor drives.
             leftDrive.setPower(left * .75);
             rightDrive.setPower(right * .75);
-            launchMotor.setPower(launch ? .5 : 0);
+            launchMotor.setPower(launch ? .75 : 0);
 
             // Send telemetry message to signify robot running;
             telemetry.addData("claw",  "Offset = %.2f", clawOffset);

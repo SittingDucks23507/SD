@@ -15,11 +15,13 @@ public class TurnRight extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+	    leftDrive.setDirection(DcMotor.Direction.REVERSE);
+	    rightDrive.setDirection(DcMotor.Direction.FORWARD);
 		waitForStart();
 	leftDrive  = hardwareMap.get(DcMotor.class, "leftMotor");
 	rightDrive = hardwareMap.get(DcMotor.class, "rightMotor");
 
-	MoveByEncoder.encoderTurn(0.25, 90, 5,
+	MoveByEncoder.encoderTurn(0.25, -90, 5,
 			leftDrive, rightDrive);
     }
 }

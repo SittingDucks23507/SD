@@ -31,7 +31,6 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -56,7 +55,7 @@ public class POVDrive extends LinearOpMode {
     public DcMotor  rightDrive;
     public DcMotor launchMotor;
 
-    public CRServo droneServo;
+    public Servo droneServo;
 
 
     @Override
@@ -73,7 +72,7 @@ public class POVDrive extends LinearOpMode {
         leftDrive  = hardwareMap.get(DcMotor.class, "leftMotor");
         rightDrive = hardwareMap.get(DcMotor.class, "rightMotor");
         launchMotor = hardwareMap.get(DcMotor.class, "launch_motor");
-        droneServo = hardwareMap.get(CRServo.class, "drone_servo");
+        droneServo = hardwareMap.get(Servo.class, "drone_servo");
        // leftArm    = hardwareMap.get(DcMotor.class, "left_arm");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
@@ -111,7 +110,9 @@ public class POVDrive extends LinearOpMode {
             turn  =  gamepad1.right_stick_x;
 
             launch = gamepad1.b;
-            droneServo.setPower(gamepad1.y ? -1 : 0);
+            droneServo.setPosition(0);
+            if (gamepad1.y)
+                droneServo.setPosition(1);
 
             // Combine drive and turn for blended motion.
             left  = drive + turn;
@@ -128,26 +129,7 @@ public class POVDrive extends LinearOpMode {
             // Output the safe vales to the motor drives.
             leftDrive.setPower(left * .75);
             rightDrive.setPower(right * .75);
-            launchMotor.setPower(launch ? .5 : 0);
-
-            // Use gamepad left & right Bumpers to open and close the claw
-//            if (gamepad1.right_bumper)
-//                clawOffset += CLAW_SPEED;
-//            else if (gamepad1.left_bumper)
-//                clawOffset -= CLAW_SPEED;
-//
-//            // Move both servos to new position.  Assume servos are mirror image of each other.
-//            clawOffset = Range.clip(clawOffset, -0.5, 0.5);
-//            leftClaw.setPosition(MID_SERVO + clawOffset);
-//            rightgClaw.setPosition(MID_SERVO - clawOffset);
-//
-//            // Use gamepad buttons to move arm up (Y) and down (A)
-//            if (gamepad1.y)
-//                leftArm.setPower(ARM_UP_POWER);
-//            else if (gamepad1.a)
-//                leftArm.setPower(ARM_DOWN_POWER);
-//            else
-//                leftArm.setPower(0.0);
+            launchMotor.setPower(launch ? .75 : 0);
 
             // Send telemetry message to signify robot running;
             telemetry.addData("left",  "%.2f", left);

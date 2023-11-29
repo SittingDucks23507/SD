@@ -145,9 +145,9 @@ public class MoveByEncoder {
 		// Ensure that the opmode is still active
 
 		// Determine new target position, and pass to motor controller
-		// newLeftTarget = leftDrive.getCurrentPosition() + (int)((9 * (degrees * Math.PI / 180)) * COUNTS_PER_INCH);
-		newRightTarget = rightDrive.getCurrentPosition() + (int)((9 * (degrees * Math.PI / 180)) * COUNTS_PER_INCH);
-		// leftDrive.setTargetPosition(newLeftTarget);
+		newLeftTarget = leftDrive.getCurrentPosition() - (int)((9 * (-degrees * Math.PI / 180)) * COUNTS_PER_INCH);
+		newRightTarget = rightDrive.getCurrentPosition() + (int)((9 * (-degrees * Math.PI / 180)) * COUNTS_PER_INCH);
+		leftDrive.setTargetPosition(newLeftTarget);
 		rightDrive.setTargetPosition(newRightTarget);
 
 		// Turn On RUN_TO_POSITION
