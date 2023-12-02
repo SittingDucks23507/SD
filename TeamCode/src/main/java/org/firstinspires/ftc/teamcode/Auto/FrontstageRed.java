@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="Frontstage Blue", group="test")
+@Autonomous(name="Frontstage Red", group="test")
 public class FrontstageRed extends LinearOpMode {
     private DcMotor leftDrive;
     private DcMotor rightDrive;

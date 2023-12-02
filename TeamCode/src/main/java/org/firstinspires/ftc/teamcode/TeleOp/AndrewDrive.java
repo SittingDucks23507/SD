@@ -55,10 +55,13 @@ public class AndrewDrive extends LinearOpMode {
     public DcMotor  leftDrive;
     public DcMotor  rightDrive;
     public DcMotor launchMotor;
+    public DcMotor armMotor;
 
-    public CRServo droneServo;
+    public Servo droneServo;
 
     double clawOffset = 0;
+
+    private int boolToInt(boolean bool) { return bool ? 1 : 0; }
 
     @Override
     public void runOpMode() {
@@ -66,6 +69,7 @@ public class AndrewDrive extends LinearOpMode {
         double right;
         double drive;
         double turn;
+        double arm;
         double max;
 
         boolean launch;
@@ -74,7 +78,8 @@ public class AndrewDrive extends LinearOpMode {
         leftDrive  = hardwareMap.get(DcMotor.class, "leftMotor");
         rightDrive = hardwareMap.get(DcMotor.class, "rightMotor");
         launchMotor = hardwareMap.get(DcMotor.class, "launch_motor");
-        droneServo = hardwareMap.get(CRServo.class, "drone_servo");
+        armMotor = hardwareMap.get(DcMotor.class, "armMotor");
+        droneServo = hardwareMap.get(Servo.class, "drone_servo");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
@@ -89,10 +94,12 @@ public class AndrewDrive extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             drive = gamepad1.right_trigger - gamepad1.left_trigger;
-            turn  =  gamepad1.left_stick_x;
+            turn  = gamepad1.left_stick_x;
+
+            arm = boolToInt(gamepad1.dpad_up) - boolToInt(gamepad1.dpad_down);
 
             launch = gamepad1.b;
-            droneServo.setPower(gamepad1.y ? -1 : 0);
+            droneServo.setPosition(gamepad1.y ? -0.5 : 0.1);
 
             // Combine drive and turn for blended motion.
             left  = drive + turn;
@@ -110,13 +117,14 @@ public class AndrewDrive extends LinearOpMode {
             leftDrive.setPower(left * .75);
             rightDrive.setPower(right * .75);
             launchMotor.setPower(launch ? .75 : 0);
+            armMotor.setPower(arm * .5);
 
             // Send telemetry message to signify robot running;
             telemetry.addData("claw",  "Offset = %.2f", clawOffset);
             telemetry.addData("left",  "%.2f", left);
             telemetry.addData("right", "%.2f", right);
             telemetry.addData("launcher", "%s", launch ? "activated" : "deactivated");
-            telemetry.addData("drone_servo", droneServo.getPower());
+            telemetry.addData("drone_servo", droneServo.getPosition());
             telemetry.update();
 
             // Pace this loop so jaw action is reasonable speed.
