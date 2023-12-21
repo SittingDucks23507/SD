@@ -31,24 +31,20 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * This particular OpMode executes a POV Game style Teleop for a direct drive robot
  * The code is structured as a LinearOpMode
- *
  * In this mode the left stick moves the robot FWD and back, the Right stick turns left and right.
  * It raises and lowers the arm using the Gamepad Y and A buttons respectively.
  * It also opens and closes the claws slowly using the left and right Bumper buttons.
- *
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
 @TeleOp(name="Andrew's Drive", group="Robot")
-//@Disabled
 public class AndrewDrive extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -58,6 +54,8 @@ public class AndrewDrive extends LinearOpMode {
     public DcMotor armMotor;
 
     public Servo droneServo;
+    public Servo wristServo;
+    public Servo fingerServo;
 
     double clawOffset = 0;
 
@@ -71,6 +69,9 @@ public class AndrewDrive extends LinearOpMode {
         double turn;
         double arm;
         double max;
+        double wrist;
+	    double finger;
+	    double stand;
 
         boolean launch;
 
@@ -80,6 +81,8 @@ public class AndrewDrive extends LinearOpMode {
         launchMotor = hardwareMap.get(DcMotor.class, "launch_motor");
         armMotor = hardwareMap.get(DcMotor.class, "armMotor");
         droneServo = hardwareMap.get(Servo.class, "drone_servo");
+        wristServo = hardwareMap.get(Servo.class, "wrist_servo");
+        fingerServo = hardwareMap.get(Servo.class, "finger_servo");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
@@ -93,13 +96,43 @@ public class AndrewDrive extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            /*
+             * Driver 1 Section
+             * Movement & Drone
+             */
             drive = gamepad1.right_trigger - gamepad1.left_trigger;
             turn  = gamepad1.left_stick_x;
 
-            arm = boolToInt(gamepad1.dpad_up) - boolToInt(gamepad1.dpad_down);
-
             launch = gamepad1.b;
-            droneServo.setPosition(gamepad1.y ? -0.5 : 0.1);
+	        // Move up when y is pressed
+            if (gamepad1.y)
+                droneServo.setPosition(1);
+            if (gamepad1.x)
+                droneServo.setPosition(0);
+            if (gamepad1.left_bumper)
+                droneServo.setPosition(.5);
+
+            /*
+             * Driver 2 Section
+             * Arm
+             */
+            arm = boolToInt(gamepad2.dpad_up) - boolToInt(gamepad2.dpad_down);
+	        // Wrist
+            wrist = 0;
+            if (gamepad2.a)
+                wrist = 0.7;
+            if (gamepad2.b)
+                wrist = 0.3;
+	        // Finger
+	        finger = 1;
+	        if (gamepad2.left_bumper)
+                finger = 0.5;
+    	    if (gamepad2.right_bumper)
+	    	    finger = 0;
+
+            /*
+             * Movement & Logic
+             */
 
             // Combine drive and turn for blended motion.
             left  = drive + turn;
@@ -107,8 +140,7 @@ public class AndrewDrive extends LinearOpMode {
 
             // Normalize the values so neither exceed +/- 1.0
             max = Math.max(Math.abs(left), Math.abs(right));
-            if (max > 1.0)
-            {
+            if (max > 1.0) {
                 left /= max;
                 right /= max;
             }
@@ -118,6 +150,15 @@ public class AndrewDrive extends LinearOpMode {
             rightDrive.setPower(right * .75);
             launchMotor.setPower(launch ? .75 : 0);
             armMotor.setPower(arm * .5);
+
+	        // Move Servos
+        //    droneServo.setPosition(stand);
+	        wristServo.setPosition(wrist);
+	        fingerServo.setPosition(finger);
+
+            /*
+             * Telemetry
+             */
 
             // Send telemetry message to signify robot running;
             telemetry.addData("claw",  "Offset = %.2f", clawOffset);
