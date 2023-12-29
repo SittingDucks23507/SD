@@ -1,50 +1,25 @@
-package org.firstinspires.ftc.teamcode.TeleOp;
+package org.firstinspires.ftc.teamcode.Auto;
 
-/*
- * Copyright (c) 2019 OpenFTC Team
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.Point;
-import org.opencv.core.Scalar;
-import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import org.firstinspires.ftc.teamcode.Auto.BackstageBlue;
 
-@TeleOp
-public class OpenCV extends LinearOpMode
+@Autonomous(name="backstage blue", group="test")
+public class BSB extends LinearOpMode
 {
     OpenCvWebcam webcam;
+    private ElapsedTime runtime = new ElapsedTime();
 
     private static int left;
     private static int center;
@@ -52,8 +27,7 @@ public class OpenCV extends LinearOpMode
     private static String largest;
 
     @Override
-    public void runOpMode()
-    {
+    public void runOpMode() {
         /*
          * Instantiate an OpenCvCamera object for the camera we'll be using.
          * In this sample, we're using a webcam. Note that you will need to
@@ -66,6 +40,7 @@ public class OpenCV extends LinearOpMode
          */
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+        waitForStart();
 
         // OR...  Do Not Activate the Camera Monitor View
         //webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"));
@@ -87,11 +62,9 @@ public class OpenCV extends LinearOpMode
          * If you really want to open synchronously, the old method is still available.
          */
         webcam.setMillisecondsPermissionTimeout(5000); // Timeout for obtaining permission is configurable. Set before opening.
-        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
-            public void onOpened()
-            {
+            public void onOpened() {
                 /*
                  * Tell the webcam to start streaming images to us! Note that you must make sure
                  * the resolution you specify is supported by the camera. If it is not, an exception
@@ -112,8 +85,7 @@ public class OpenCV extends LinearOpMode
             }
 
             @Override
-            public void onError(int errorCode)
-            {
+            public void onError(int errorCode) {
                 /*
                  * This will be called if the camera could not be opened
                  */
@@ -128,8 +100,7 @@ public class OpenCV extends LinearOpMode
          */
         waitForStart();
 
-        while (opModeIsActive())
-        {
+        while (opModeIsActive()) {
             /*
              * Send some stats to the telemetry
              */
@@ -145,102 +116,31 @@ public class OpenCV extends LinearOpMode
             telemetry.addData("most", largest);
             telemetry.update();
 
-            /*
-             * NOTE: stopping the stream from the camera early (before the end of the OpMode
-             * when it will be automatically stopped for you) *IS* supported. The "if" statement
-             * below will stop streaming from the camera when the "A" button on gamepad 1 is pressed.
-             */
-            if(gamepad1.a)
-            {
-                /*
-                 * IMPORTANT NOTE: calling stopStreaming() will indeed stop the stream of images
-                 * from the camera (and, by extension, stop calling your vision pipeline). HOWEVER,
-                 * if the reason you wish to stop the stream early is to switch use of the camera
-                 * over to, say, Vuforia or TFOD, you will also need to call closeCameraDevice()
-                 * (commented out below), because according to the Android Camera API documentation:
-                 *         "Your application should only have one Camera object active at a time for
-                 *          a particular hardware camera."
-                 *
-                 * NB: calling closeCameraDevice() will internally call stopStreaming() if applicable,
-                 * but it doesn't hurt to call it anyway, if for no other reason than clarity.
-                 *
-                 * NB2: if you are stopping the camera stream to simply save some processing power
-                 * (or battery power) for a short while when you do not need your vision pipeline,
-                 * it is recommended to NOT call closeCameraDevice() as you will then need to re-open
-                 * it the next time you wish to activate your vision pipeline, which can take a bit of
-                 * time. Of course, this comment is irrelevant in light of the use case described in
-                 * the above "important note".
-                 */
-                webcam.stopStreaming();
-                //webcam.closeCameraDevice();
+            sleep(5000);
+            webcam.stopStreaming();
+            webcam.closeCameraDevice();
+            if (largest == "left") {
+                BackstageBlue.left();
             }
-
-            /*
-             * For the purposes of this sample, throttle ourselves to 10Hz loop to avoid burning
-             * excess CPU cycles for no reason. (By default, telemetry is only sent to the DS at 4Hz
-             * anyway). Of course in a real OpMode you will likely not want to do this.
-             */
-            sleep(100);
+            if (largest == "center")
+                BackstageBlue.center();
+            if (largest == "right")
+                BackstageBlue.right();
         }
     }
-
-    /*
-     * An example image processing pipeline to be run upon receipt of each frame from the camera.
-     * Note that the processFrame() method is called serially from the frame worker thread -
-     * that is, a new camera frame will not come in while you're still processing a previous one.
-     * In other words, the processFrame() method will never be called multiple times simultaneously.
-     *
-     * However, the rendering of your processed image to the viewport is done in parallel to the
-     * frame worker thread. That is, the amount of time it takes to render the image to the
-     * viewport does NOT impact the amount of frames per second that your pipeline can process.
-     *
-     * IMPORTANT NOTE: this pipeline is NOT invoked on your OpMode thread. It is invoked on the
-     * frame worker thread. This should not be a problem in the vast majority of cases. However,
-     * if you're doing something weird where you do need it synchronized with your OpMode thread,
-     * then you will need to account for that accordingly.
-     */
     class SamplePipeline extends OpenCvPipeline
     {
         boolean viewportPaused;
-        Mat yCbCrChan2Mat = new Mat();
-        Mat thresholdMat = new Mat();
-
-        /*
-         * NOTE: if you wish to use additional Mat objects in your processing pipeline, it is
-         * highly recommended to declare them here as instance variables and re-use them for
-         * each invocation of processFrame(), rather than declaring them as new local variables
-         * each time through processFrame(). This removes the danger of causing a memory leak
-         * by forgetting to call mat.release(), and it also reduces memory pressure by not
-         * constantly allocating and freeing large chunks of memory.
-         */
-
         @Override
         public Mat processFrame(Mat input)
         {
-            /*
-             * IMPORTANT NOTE: the input Mat that is passed in as a parameter to this method
-             * will only dereference to the same image for the duration of this particular
-             * invocation of this method. That is, if for some reason you'd like to save a copy
-             * of this particular frame for later use, you will need to either clone it or copy
-             * it to another Mat.
-             */
-
-            // literal black (& white) magic
-            // thanks to this team & this code https://raw.githubusercontent.com/uhs3939/SkyStone/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/opencvSkystoneDetector.java
-
-            //color diff cb.
-            //lower cb = more blue = skystone = white
-            //higher cb = less blue = yellow stone = grey
-            Imgproc.cvtColor(input, yCbCrChan2Mat, Imgproc.COLOR_RGB2YCrCb);//converts rgb to ycrcb
-            Core.extractChannel(yCbCrChan2Mat, yCbCrChan2Mat, 2);//takes cb difference and stores
-
-            //b&w
-            Imgproc.threshold(yCbCrChan2Mat, thresholdMat, 102, 255, Imgproc.THRESH_BINARY_INV);
+            input.convertTo(input, -1, 2.0, 0);
+            Core.bitwise_not(input, input);
 
             for (int row = 0; row < input.rows(); row++) {
                 for (int column = 0; column < input.cols(); column++) {
-                    double blue = input.get(row, column)[2];
-                    if (blue > 128) {
+                    double dark = (input.get(row, column)[0] + input.get(row, column)[2]) / 2;
+                    if (dark < 128 && dark > 64) {
                         if (column < input.cols() / 3)
                             left++;
                         if ((column > input.cols() / 3) && (column < input.cols() * 2 / 3))
@@ -250,14 +150,15 @@ public class OpenCV extends LinearOpMode
                     }
                 }
             }
-            if (left > right && left > center)
-                largest = "left";
             if (right > left && right > center)
                 largest = "right";
-            if (center > right && center > left)
+            else if (left > right && center > right)
                 largest = "center";
-            left = center = right = 0;
-            // double[] test1 = input.get(input.rows()/2, input.cols()/2);
+            else
+                largest = "left";
+            left = 0;
+            center = 0;
+            right = 0;
             /**
              * NOTE: to see how to get data from your pipeline to your OpMode as well as how
              * to change which stage of the pipeline is rendered to the viewport when it is
