@@ -15,7 +15,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 import org.firstinspires.ftc.teamcode.Auto.BackstageBlue;
 
-@Autonomous(name="backstage blue", group="test")
+@Autonomous(name="BSB", group="test")
 public class BSB extends LinearOpMode
 {
     OpenCvWebcam webcam;
@@ -40,7 +40,6 @@ public class BSB extends LinearOpMode
          */
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-        waitForStart();
 
         // OR...  Do Not Activate the Camera Monitor View
         //webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"));
@@ -81,7 +80,7 @@ public class BSB extends LinearOpMode
                  * For a rear facing camera or a webcam, rotation is defined assuming the camera is facing
                  * away from the user.
                  */
-                webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+                webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_RIGHT);
             }
 
             @Override
@@ -118,14 +117,14 @@ public class BSB extends LinearOpMode
 
             sleep(5000);
             webcam.stopStreaming();
-            webcam.closeCameraDevice();
-            if (largest == "left") {
+            //  webcam.closeCameraDevice();
+            /*if (largest == "left") {
                 BackstageBlue.left();
             }
             if (largest == "center")
                 BackstageBlue.center();
             if (largest == "right")
-                BackstageBlue.right();
+                BackstageBlue.right();*/
         }
     }
     class SamplePipeline extends OpenCvPipeline
