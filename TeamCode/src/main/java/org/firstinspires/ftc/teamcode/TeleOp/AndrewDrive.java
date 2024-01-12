@@ -92,7 +92,7 @@ public class AndrewDrive extends LinearOpMode {
 
         launchMotor.setDirection(DcMotor.Direction.FORWARD);
         wrist = 0;
-        finger = 1;
+        finger = 0.4;
 
         waitForStart();
 
@@ -117,17 +117,17 @@ public class AndrewDrive extends LinearOpMode {
             if (gamepad2.x)
                 armMotor.setTargetPosition(5);
 	        // Wrist
+            wristServo.setDirection(Servo.Direction.REVERSE);
+            wrist = 1;
             if (gamepad2.a)
-                wrist = 0.7;
-            if (gamepad2.b)
                 wrist = 0.5;
+            if (gamepad2.b)
+                wrist = 0.1;
 	        // Finger
-	        if (gamepad2.left_bumper)
-                finger = 0.5;
     	    if (gamepad2.right_bumper)
-	    	    finger = 0;
+	    	    finger = 0.2;
             if (gamepad2.left_trigger > 0)
-                finger = 1;
+                finger = 0.6;
 
             /*
              * Movement & Logic
@@ -152,7 +152,7 @@ public class AndrewDrive extends LinearOpMode {
 
 	        // Move Servos
             droneServo.setPosition(stand);
-	        wristServo.setPosition(wrist);
+	        //wristServo.setPosition(wrist);
 	        fingerServo.setPosition(finger);
 
             /*
