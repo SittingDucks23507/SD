@@ -9,8 +9,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="Backstage Red", group="test")
 public class BackstageRed extends LinearOpMode {
-    private DcMotor leftDrive;
-    private DcMotor rightDrive;
+	private DcMotor leftDrive;
+	private DcMotor rightDrive;
 	private Servo fingerServo;
 
     private ElapsedTime runtime = new ElapsedTime();
