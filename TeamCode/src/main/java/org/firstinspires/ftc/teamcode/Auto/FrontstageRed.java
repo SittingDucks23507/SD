@@ -17,7 +17,8 @@ public class FrontstageRed extends LinearOpMode {
 		DcMotor leftDrive = hardwareMap.get(DcMotor.class, "leftMotor");
 		DcMotor rightDrive = hardwareMap.get(DcMotor.class, "rightMotor");
 		Servo fingerServo = hardwareMap.get(Servo.class, "finger_servo");
-		fingerServo.setPosition(0.4);
+		Servo wristServo = hardwareMap.get(Servo.class, "wrist_servo");
+		wristServo.setDirection(Servo.Direction.FORWARD);
 
 		waitForStart();
 		leftDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -34,5 +35,8 @@ public class FrontstageRed extends LinearOpMode {
 		MoveByEncoder.encoderDrive(.25, -5, 5,
 				leftDrive, rightDrive);
 		fingerServo.setPosition(0.2);
+		wristServo.setPosition(.5);
+		MoveByEncoder.encoderDrive(.25, -4, 5,
+				leftDrive, rightDrive);
 	}
 }

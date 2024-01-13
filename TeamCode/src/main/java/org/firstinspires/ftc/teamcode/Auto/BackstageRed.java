@@ -18,22 +18,26 @@ public class BackstageRed extends LinearOpMode {
 		DcMotor leftDrive = hardwareMap.get(DcMotor.class, "leftMotor");
 		DcMotor rightDrive = hardwareMap.get(DcMotor.class, "rightMotor");
 		Servo fingerServo = hardwareMap.get(Servo.class, "finger_servo");
-		fingerServo.setPosition(0.4);
+		Servo wristServo = hardwareMap.get(Servo.class, "wrist_servo");
+		wristServo.setDirection(Servo.Direction.FORWARD);
 
 		waitForStart();
 		leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);
+		rightDrive.setDirection(DcMotor.Direction.FORWARD);
 
-		// Place first pixel on the center & turn.
+			// Place first pixel on the center & turn.
 		MoveByEncoder.encoderDrive(.25, 32, 5,
 				leftDrive, rightDrive);
-	    MoveByEncoder.encoderDrive(.25, -6, 5,
+		MoveByEncoder.encoderDrive(.25, -6, 5,
 				leftDrive, rightDrive);
-	    MoveByEncoder.encoderTurn(0.25, 90, 5,
-				leftDrive, rightDrive);
-		// Score second pixel on board.
-	    MoveByEncoder.encoderDrive(.25, 38, 5,
-				leftDrive, rightDrive);
-		fingerServo.setPosition(0.2);
-    }
+	   	 MoveByEncoder.encoderTurn(0.25, 90, 5,
+				 leftDrive, rightDrive);
+			// Score second pixel on board.
+	   	 MoveByEncoder.encoderDrive(.25, 38, 5,
+					leftDrive, rightDrive);
+			fingerServo.setPosition(0.2);
+			wristServo.setPosition(.5);
+			MoveByEncoder.encoderDrive(.25, -4, 5,
+					leftDrive, rightDrive);
+	}
 }
