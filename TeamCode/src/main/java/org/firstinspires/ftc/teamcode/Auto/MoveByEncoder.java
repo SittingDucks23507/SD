@@ -81,110 +81,109 @@ public class MoveByEncoder {
      *  3) Driver stops the opmode running.
      */
     public static void encoderDrive(double speed,
-				    double inches,
-				    double timeoutS,
-				    DcMotor leftDrive, DcMotor rightDrive) {
+                                    double inches,
+                                    double timeoutS,
+                                    DcMotor leftDrive, DcMotor rightDrive) {
         int newLeftTarget;
         int newRightTarget;
 
-	ElapsedTime runtime = new ElapsedTime();
+        ElapsedTime runtime = new ElapsedTime();
 
         // Ensure that the opmode is still active
 
-	// Determine new target position, and pass to motor controller
-	newLeftTarget = leftDrive.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
-	newRightTarget = rightDrive.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
-	leftDrive.setTargetPosition(newLeftTarget);
-	rightDrive.setTargetPosition(newRightTarget);
+        // Determine new target position, and pass to motor controller
+        newLeftTarget = leftDrive.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
+        newRightTarget = rightDrive.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
+        leftDrive.setTargetPosition(newLeftTarget);
+        rightDrive.setTargetPosition(newRightTarget);
 
-	// Turn On RUN_TO_POSITION
-	leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-	rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // Turn On RUN_TO_POSITION
+        leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-	// reset the timeout time and start motion.
-	runtime.reset();
-	leftDrive.setPower(Math.abs(speed));
-	rightDrive.setPower(Math.abs(speed));
+        // reset the timeout time and start motion.
+        runtime.reset();
+        leftDrive.setPower(Math.abs(speed));
+        rightDrive.setPower(Math.abs(speed));
 
-	// keep looping while we are still active, and there is time left, and both motors are running.
-	// Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-	// its target position, the motion will stop.  This is "safer" in the event that the robot will
-	// always end the motion as soon as possible.
-	// However, if you require that BOTH motors have finished their moves before the robot continues
-	// onto the next step, use (isBusy() || isBusy()) in the loop test.
-	while (
-	       (runtime.seconds() < timeoutS) &&
-	       (leftDrive.isBusy() && rightDrive.isBusy())) {
-
-	    // Display it for the driver.
-//	    telemetry.addData("Running to",  " %7d :%7d", newLeftTarget,  newRightTarget);
-//	    telemetry.addData("Currently at",  " at %7d :%7d",
-//                                            leftDrive.getCurrentPosition(), rightDrive.getCurrentPosition());
-//	    telemetry.update();
-	}
+        // keep looping while we are still active, and there is time left, and both motors are running.
+        // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+        // its target position, the motion will stop.  This is "safer" in the event that the robot will
+        // always end the motion as soon as possible.
+        // However, if you require that BOTH motors have finished their moves before the robot continues
+        // onto the next step, use (isBusy() || isBusy()) in the loop test.
+        while (
+                (runtime.seconds() < timeoutS) &&
+                        (leftDrive.isBusy() && rightDrive.isBusy())) {
+        }
 
 
-	// Stop all motion;
-	leftDrive.setPower(0);
-	rightDrive.setPower(0);
+        // Stop all motion;
+        leftDrive.setPower(0);
+        rightDrive.setPower(0);
 
-	// Turn off RUN_TO_POSITION
-	leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-	rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // Turn off RUN_TO_POSITION
+        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
-	public static void encoderTurn(double speed,
-	                                double degrees,
-	                                double timeoutS,
-	                                DcMotor leftDrive, DcMotor rightDrive) {
-		int newLeftTarget;
-		int newRightTarget;
+    public static void encoderTurn(double speed,
+                                   double degrees,
+                                   double timeoutS,
+                                   DcMotor leftDrive, DcMotor rightDrive) {
+        int newLeftTarget;
+        int newRightTarget;
 
-		ElapsedTime runtime = new ElapsedTime();
+        ElapsedTime runtime = new ElapsedTime();
 
-		// Ensure that the opmode is still active
+        // Ensure that the opmode is still active
 
-		// Determine new target position, and pass to motor controller
-		newLeftTarget = leftDrive.getCurrentPosition() - (int)((9 * (-degrees * Math.PI / 180)) * COUNTS_PER_INCH);
-		newRightTarget = rightDrive.getCurrentPosition() + (int)((9 * (-degrees * Math.PI / 180)) * COUNTS_PER_INCH);
-		leftDrive.setTargetPosition(newLeftTarget);
-		rightDrive.setTargetPosition(newRightTarget);
+        // Determine new target position, and pass to motor controller
+        newLeftTarget = leftDrive.getCurrentPosition() - (int)((9 * (-degrees * Math.PI / 180)) * COUNTS_PER_INCH);
+        newRightTarget = rightDrive.getCurrentPosition() + (int)((9 * (-degrees * Math.PI / 180)) * COUNTS_PER_INCH);
+        leftDrive.setTargetPosition(newLeftTarget);
+        rightDrive.setTargetPosition(newRightTarget);
 
-		// Turn On RUN_TO_POSITION
-		leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // Turn On RUN_TO_POSITION
+        leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-		// reset the timeout time and start motion.
-		runtime.reset();
-		leftDrive.setPower(Math.abs(speed));
-		rightDrive.setPower(Math.abs(speed));
+        // reset the timeout time and start motion.
+        runtime.reset();
+        if (degrees > 0) {
+            leftDrive.setPower(Math.abs(speed+0.05));
+            rightDrive.setPower(Math.abs(speed));
+        } else {
+            leftDrive.setPower(Math.abs(speed));
+            rightDrive.setPower(Math.abs(speed+0.05));
+        }
 
-		// keep looping while we are still active, and there is time left, and both motors are running.
-		// Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-		// its target position, the motion will stop.  This is "safer" in the event that the robot will
-		// always end the motion as soon as possible.
-		// However, if you require that BOTH motors have finished their moves before the robot continues
-		// onto the next step, use (isBusy() || isBusy()) in the loop test.
-		while (
-				(runtime.seconds() < timeoutS) &&
-						(leftDrive.isBusy() && rightDrive.isBusy())) {
+        // keep looping while we are still active, and there is time left, and both motors are running.
+        // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+        // its target position, the motion will stop.  This is "safer" in the event that the robot will
+        // always end the motion as soon as possible.
+        // However, if you require that BOTH motors have finished their moves before the robot continues
+        // onto the next step, use (isBusy() || isBusy()) in the loop test.
+        while (
+                (runtime.seconds() < timeoutS) &&
+                        (leftDrive.isBusy() && rightDrive.isBusy())) {
 
-			// Display it for the driver.
+            // Display it for the driver.
 //	    telemetry.addData("Running to",  " %7d :%7d", newLeftTarget,  newRightTarget);
 //	    telemetry.addData("Currently at",  " at %7d :%7d",
 //                                            leftDrive.getCurrentPosition(), rightDrive.getCurrentPosition());
 //	    telemetry.update();
-		}
+        }
 
 
-		// Stop all motion;
-		leftDrive.setPower(0);
-		rightDrive.setPower(0);
+        // Stop all motion;
+        leftDrive.setPower(0);
+        rightDrive.setPower(0);
 
-		// Turn off RUN_TO_POSITION
-		leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-		rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // Turn off RUN_TO_POSITION
+        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-	}
+    }
 
 }

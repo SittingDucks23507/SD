@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode.Auto;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -49,7 +48,6 @@ import java.util.List;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
 @TeleOp(name = "Concept: TensorFlow Object Detection Easy", group = "Concept")
-@Disabled
 public class ConceptTensorFlowObjectDetectionEasy extends LinearOpMode {
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
@@ -58,6 +56,11 @@ public class ConceptTensorFlowObjectDetectionEasy extends LinearOpMode {
      * The variable to store our instance of the TensorFlow Object Detection processor.
      */
     private TfodProcessor tfod;
+
+    // Five seconds from start
+    private long duration = System.currentTimeMillis();
+    // How left it is
+    private int left = 0;
 
     /**
      * The variable to store our instance of the vision portal.
@@ -76,29 +79,24 @@ public class ConceptTensorFlowObjectDetectionEasy extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            while (opModeIsActive()) {
+            duration /= 1000; // to seconds
+            duration += 5;
 
+            while (System.currentTimeMillis()/1000 <= duration) {
                 telemetryTfod();
 
                 // Push telemetry to the Driver Station.
                 telemetry.update();
 
-                // Save CPU resources; can resume streaming when needed.
-                if (gamepad1.dpad_down) {
-                    visionPortal.stopStreaming();
-                } else if (gamepad1.dpad_up) {
-                    visionPortal.resumeStreaming();
-                }
-
                 // Share the CPU.
                 sleep(20);
             }
+            telemetry.addData("left: ", left);
         }
 
         // Save more CPU resources when camera is no longer needed.
         visionPortal.close();
-
-    }   // end runOpMode()
+    }
 
     /**
      * Initialize the TensorFlow Object Detection processor.
@@ -117,7 +115,7 @@ public class ConceptTensorFlowObjectDetectionEasy extends LinearOpMode {
                 BuiltinCameraDirection.BACK, tfod);
         }
 
-    }   // end method initTfod()
+    }
 
     /**
      * Add telemetry about TensorFlow Object Detection (TFOD) recognitions.
@@ -132,12 +130,16 @@ public class ConceptTensorFlowObjectDetectionEasy extends LinearOpMode {
             double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
             double y = (recognition.getTop()  + recognition.getBottom()) / 2 ;
 
+            if (x < 640/2) { // just guessing where half the screen is
+                left++;
+            }
+
             telemetry.addData(""," ");
             telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
             telemetry.addData("- Position", "%.0f / %.0f", x, y);
             telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
-        }   // end for() loop
+        }
 
-    }   // end method telemetryTfod()
+    }
 
-}   // end class
+}
