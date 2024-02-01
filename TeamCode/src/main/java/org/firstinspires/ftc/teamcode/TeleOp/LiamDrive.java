@@ -91,7 +91,7 @@ public class LiamDrive extends LinearOpMode {
         rightDrive.setDirection(DcMotor.Direction.FORWARD);
 
         launchMotor.setDirection(DcMotor.Direction.FORWARD);
-        wrist = 0;
+        wrist = 0.1;
         finger = 0.4;
 
         waitForStart();
@@ -113,19 +113,18 @@ public class LiamDrive extends LinearOpMode {
              * Driver 2 Section
              * Arm
              */
-            arm = boolToInt(gamepad2.dpad_up) - boolToInt(gamepad2.dpad_down);
+            arm = boolToInt(gamepad1.dpad_up) - boolToInt(gamepad1.dpad_down);
             if (gamepad2.x)
                 armMotor.setTargetPosition(5);
-	        // Wrist
-            wristServo.setDirection(Servo.Direction.REVERSE);
-            wrist = 1;
-            if (gamepad2.a)
+            // Wrist
+            wristServo.setDirection(Servo.Direction.FORWARD);
+            if (gamepad1.x)
                 wrist = 0.5;
-            if (gamepad2.b)
+            if (gamepad1.a)
                 wrist = 0.1;
-	        // Finger
-    	    if (gamepad2.right_bumper)
-	    	    finger = 0.2;
+            // Finger
+            if (gamepad2.right_bumper)
+                finger = 0.2;
             if (gamepad2.left_trigger > 0)
                 finger = 0.6;
 
@@ -147,12 +146,12 @@ public class LiamDrive extends LinearOpMode {
             // Output the safe vales to the motor drives.
             leftDrive.setPower(left * .75);
             rightDrive.setPower(right * .75);
-            launchMotor.setPower(launch ? .75 : 0);
+            launchMotor.setPower(launch ? (.75/2) : 0);
             armMotor.setPower(arm * .5);
 
 	        // Move Servos
             droneServo.setPosition(stand);
-	        //wristServo.setPosition(wrist);
+	        wristServo.setPosition(wrist);
 	        fingerServo.setPosition(finger);
 
             /*

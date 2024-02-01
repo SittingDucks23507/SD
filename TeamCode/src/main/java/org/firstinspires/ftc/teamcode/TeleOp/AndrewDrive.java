@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
@@ -73,6 +74,9 @@ public class AndrewDrive extends LinearOpMode {
 	    double finger;
 	    double stand;
 
+        Gamepad previousGamepad = new Gamepad();
+        Gamepad currentGamepad = new Gamepad();
+
         boolean launch;
 
         // Define and Initialize Motors
@@ -91,6 +95,7 @@ public class AndrewDrive extends LinearOpMode {
         rightDrive.setDirection(DcMotor.Direction.FORWARD);
 
         launchMotor.setDirection(DcMotor.Direction.FORWARD);
+        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         wrist = .1;
         finger = 0.4;
 
@@ -98,6 +103,9 @@ public class AndrewDrive extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            // For Rising Edge Detetor https://gm0.org/en/latest/docs/software/tutorials/gamepad.html
+            previousGamepad.copy(currentGamepad);
+            currentGamepad.copy(gamepad1);
             /*
              * Driver 1 Section
              * Movement & Drone
@@ -119,14 +127,21 @@ public class AndrewDrive extends LinearOpMode {
 	        // Wrist
             wristServo.setDirection(Servo.Direction.FORWARD);
             if (gamepad1.left_bumper)
-                wrist = 0.7;
+                wrist = 0.6;
             if (gamepad1.right_bumper)
                 wrist = 0.1;
+            if (gamepad1.x)
+                wrist = 0.35;
 	        // Finger
-    	    if (gamepad2.right_bumper)
-	    	    finger = 0.2;
-            if (gamepad2.left_trigger > 0)
-                finger = 0.6;
+            if (currentGamepad.a && !previousGamepad.a) {
+                if (fingerServo.getPosition() != 0.6) {
+                    finger = 0.55;
+                }
+                if (fingerServo.getPosition() != 0.2) {
+                    finger = 0.2;
+                }
+
+            }
 
             /*
              * Movement & Logic
