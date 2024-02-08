@@ -70,9 +70,9 @@ public class AndrewDrive extends LinearOpMode {
         double turn;
         double arm;
         double max;
-        double wrist;
-	    double finger;
-	    double stand;
+        double wrist = 0.1;
+        double finger = 0.55;
+        double stand;
 
         Gamepad previousGamepad = new Gamepad();
         Gamepad currentGamepad = new Gamepad();
@@ -96,8 +96,6 @@ public class AndrewDrive extends LinearOpMode {
 
         launchMotor.setDirection(DcMotor.Direction.FORWARD);
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        wrist = .1;
-        finger = 0.4;
 
         waitForStart();
 
@@ -114,7 +112,7 @@ public class AndrewDrive extends LinearOpMode {
             turn  = gamepad1.left_stick_x;
 
             launch = gamepad1.b;
-	        // Move up when y is pressed
+            // Move up when y is pressed
             stand = gamepad1.y ? 0 : 0.4;
 
             /*
@@ -124,7 +122,7 @@ public class AndrewDrive extends LinearOpMode {
             arm = boolToInt(gamepad1.dpad_up) - boolToInt(gamepad1.dpad_down);
             if (gamepad2.x)
                 armMotor.setTargetPosition(5);
-	        // Wrist
+            // Wrist
             wristServo.setDirection(Servo.Direction.FORWARD);
             if (gamepad1.left_bumper)
                 wrist = 0.6;
@@ -132,7 +130,7 @@ public class AndrewDrive extends LinearOpMode {
                 wrist = 0.1;
             if (gamepad1.x)
                 wrist = 0.35;
-	        // Finger
+            // Finger
             if (currentGamepad.a && !previousGamepad.a) {
                 if (fingerServo.getPosition() != 0.6) {
                     finger = 0.55;
@@ -164,10 +162,10 @@ public class AndrewDrive extends LinearOpMode {
             launchMotor.setPower(launch ? (.75/2) : 0);
             armMotor.setPower(arm * .5);
 
-	        // Move Servos
+            // Move Servos
             droneServo.setPosition(stand);
-	        wristServo.setPosition(wrist);
-	        fingerServo.setPosition(finger);
+            wristServo.setPosition(wrist);
+            fingerServo.setPosition(finger);
 
             /*
              * Telemetry
@@ -177,6 +175,8 @@ public class AndrewDrive extends LinearOpMode {
             telemetry.addData("claw",  "Offset = %.2f", clawOffset);
             telemetry.addData("left",  "%.2f", left);
             telemetry.addData("right", "%.2f", right);
+            telemetry.addData("finger", "%.2f", finger);
+            telemetry.addData("wrist", "%.2f", wrist);
             telemetry.addData("launcher", "%s", launch ? "activated" : "deactivated");
             telemetry.addData("drone_servo", droneServo.getPosition());
             telemetry.update();
