@@ -24,19 +24,13 @@ public class FrontstageBlue extends LinearOpMode {
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
         rightDrive.setDirection(DcMotor.Direction.FORWARD);
 
-        MoveByEncoder.encoderDrive(.25, 32, 5,
-                leftDrive, rightDrive);
-        MoveByEncoder.encoderDrive(.25, -6, 5,
-                leftDrive, rightDrive);
-        MoveByEncoder.encoderTurn(0.25, -90, 5,
-                leftDrive, rightDrive);
-        MoveByEncoder.encoderDrive(.25, 92, 15,
-                leftDrive, rightDrive);
-        MoveByEncoder.encoderDrive(.25, -5, 5,
-                leftDrive, rightDrive);
+        MoveByEncoder.encoderDrive(.25, 32, 5);
+        MoveByEncoder.encoderDrive(.25, -6, 5);
+        MoveByEncoder.encoderTurn(0.25, -90, 5);
+        MoveByEncoder.encoderDrive(.25, 92, 15);
+        MoveByEncoder.encoderDrive(.25, -5, 5);
         fingerServo.setPosition(0.2);
         wristServo.setPosition(.5);
-        MoveByEncoder.encoderDrive(.25, -4, 5,
-                leftDrive, rightDrive);
+        MoveByEncoder.encoderDrive(.25, -4, 5);
     }
 }

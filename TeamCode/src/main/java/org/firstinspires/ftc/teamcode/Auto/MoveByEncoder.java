@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.teamcode.Auto;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -59,7 +61,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 public class MoveByEncoder {
-    private static ElapsedTime     runtime = new ElapsedTime();
 
     // Calculate the COUNTS_PER_INCH for your specific drive train.
     // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
@@ -82,8 +83,11 @@ public class MoveByEncoder {
      */
     public static void encoderDrive(double speed,
                                     double inches,
-                                    double timeoutS,
-                                    DcMotor leftDrive, DcMotor rightDrive) {
+                                    double timeoutS) {
+        DcMotor leftDrive = hardwareMap.get(DcMotor.class, "leftMotor");
+        DcMotor rightDrive = hardwareMap.get(DcMotor.class, "rightMotor");
+        leftDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightDrive.setDirection(DcMotor.Direction.FORWARD);
         int newLeftTarget;
         int newRightTarget;
 
@@ -129,8 +133,11 @@ public class MoveByEncoder {
     }
     public static void encoderTurn(double speed,
                                    double degrees,
-                                   double timeoutS,
-                                   DcMotor leftDrive, DcMotor rightDrive) {
+                                   double timeoutS) {
+        DcMotor leftDrive = hardwareMap.get(DcMotor.class, "leftMotor");
+        DcMotor rightDrive = hardwareMap.get(DcMotor.class, "rightMotor");
+        leftDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightDrive.setDirection(DcMotor.Direction.FORWARD);
         int newLeftTarget;
         int newRightTarget;
 

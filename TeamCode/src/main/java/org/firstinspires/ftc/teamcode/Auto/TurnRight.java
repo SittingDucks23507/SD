@@ -21,7 +21,6 @@ public class TurnRight extends LinearOpMode {
 	leftDrive  = hardwareMap.get(DcMotor.class, "leftMotor");
 	rightDrive = hardwareMap.get(DcMotor.class, "rightMotor");
 
-	MoveByEncoder.encoderTurn(0.25, -90, 5,
-			leftDrive, rightDrive);
+	MoveByEncoder.encoderTurn(0.25, -90, 5);
     }
 }

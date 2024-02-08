@@ -22,9 +22,7 @@ public class IIx extends LinearOpMode {
 		leftDrive.setDirection(DcMotor.Direction.REVERSE);
         rightDrive.setDirection(DcMotor.Direction.FORWARD);
 
-		MoveByEncoder.encoderDrive(.25, 24*2, 5,
-					   leftDrive, rightDrive);
-	    MoveByEncoder.encoderDrive(.25, -12, 5,
-			    leftDrive, rightDrive);
+		MoveByEncoder.encoderDrive(.25, 24*2, 5);
+	    MoveByEncoder.encoderDrive(.25, -12, 5);
     }
 }
