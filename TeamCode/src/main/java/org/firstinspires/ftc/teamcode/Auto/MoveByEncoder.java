@@ -29,9 +29,8 @@
 
 package org.firstinspires.ftc.teamcode.Auto;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -83,9 +82,9 @@ public class MoveByEncoder {
      */
     public static void encoderDrive(double speed,
                                     double inches,
-                                    double timeoutS) {
-        DcMotor leftDrive = hardwareMap.get(DcMotor.class, "leftMotor");
-        DcMotor rightDrive = hardwareMap.get(DcMotor.class, "rightMotor");
+                                    double timeoutS, HardwareMap hwmap) {
+        DcMotor leftDrive = hwmap.get(DcMotor.class, "leftMotor");
+        DcMotor rightDrive = hwmap.get(DcMotor.class, "rightMotor");
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
         rightDrive.setDirection(DcMotor.Direction.FORWARD);
         int newLeftTarget;
@@ -133,9 +132,9 @@ public class MoveByEncoder {
     }
     public static void encoderTurn(double speed,
                                    double degrees,
-                                   double timeoutS) {
-        DcMotor leftDrive = hardwareMap.get(DcMotor.class, "leftMotor");
-        DcMotor rightDrive = hardwareMap.get(DcMotor.class, "rightMotor");
+                                   double timeoutS, HardwareMap hwmap) {
+        DcMotor leftDrive = hwmap.get(DcMotor.class, "leftMotor");
+        DcMotor rightDrive = hwmap.get(DcMotor.class, "rightMotor");
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
         rightDrive.setDirection(DcMotor.Direction.FORWARD);
         int newLeftTarget;

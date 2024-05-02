@@ -71,7 +71,7 @@ public class AndrewDrive extends LinearOpMode {
         double arm;
         double max;
         double wrist = 0.1;
-        double finger = 0.55;
+        double finger = 0.65;
         double stand;
 
         Gamepad previousGamepad = new Gamepad();
@@ -133,7 +133,7 @@ public class AndrewDrive extends LinearOpMode {
             // Finger
             if (currentGamepad.a && !previousGamepad.a) {
                 if (fingerServo.getPosition() != 0.6) {
-                    finger = 0.55;
+                    finger = 0.65;
                 }
                 if (fingerServo.getPosition() != 0.2) {
                     finger = 0.2;

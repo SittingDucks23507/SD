@@ -34,8 +34,6 @@ import static org.firstinspires.ftc.teamcode.Auto.MoveByEncoder.encoderTurn;
 
 import android.graphics.Color;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
@@ -65,9 +63,8 @@ import com.qualcomm.robotcore.hardware.SwitchableLight;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
-@Autonomous(name = "Frontstage Blue", group = "Sensor")
-@Disabled
-public class FrontstageBlue extends LinearOpMode {
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Blue", group = "Sensor")
+public class Blue extends LinearOpMode {
     NormalizedColorSensor leftSensor;
     NormalizedColorSensor rightSensor;
     static final float SPEED = .25f;
@@ -102,7 +99,7 @@ public class FrontstageBlue extends LinearOpMode {
 
         // Wait for the start button to be pressed.
         waitForStart();
-        // encoderDrive(SPEED, 28, 5);
+        encoderDrive(SPEED, 28, 5, hardwareMap);
         sleep(2500);
 
         // Get the normalized colors from the sensor
@@ -129,20 +126,19 @@ public class FrontstageBlue extends LinearOpMode {
 
         telemetry.update();
 
-        /*
-        if (hsv_right[0] > 200 && hsv_left[0] < 200) { // Right
-            encoderTurn(SPEED, 90, 5);
-            encoderDrive(SPEED, 6, 5);
-            encoderDrive(SPEED, -6, 5);
+        if (hsv_right[0] > 200 && hsv_left[0] < 200) {
+            encoderTurn(SPEED, 90, 5, hardwareMap);
+            encoderDrive(SPEED, 6, 5, hardwareMap);
+            encoderDrive(SPEED, -6, 5, hardwareMap);
         }
-        if (hsv_right[0] < 200 && hsv_left[0] > 200) { // Left
-            encoderDrive(SPEED, 6, 5);
-            encoderDrive(SPEED, -6, 5);
+        if (hsv_right[0] < 200 && hsv_left[0] > 200) {
+            encoderTurn(SPEED, -90, 5, hardwareMap);
+            encoderDrive(SPEED, 6, 5, hardwareMap);
+            encoderDrive(SPEED, -6, 5, hardwareMap);
         }
-        if (hsv_right[0] < 200 && hsv_left[0] < 200) { // Center
-            encoderDrive(SPEED, 6, 5);
-            encoderDrive(SPEED, -6, 5);
+        if (hsv_right[0] < 200 && hsv_left[0] < 200) {
+            encoderDrive(SPEED, 6, 5, hardwareMap);
+            encoderDrive(SPEED, -6, 5, hardwareMap);
         }
-         */
     }
 }

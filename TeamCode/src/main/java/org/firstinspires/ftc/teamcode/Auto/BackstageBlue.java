@@ -35,6 +35,7 @@ import static org.firstinspires.ftc.teamcode.Auto.MoveByEncoder.encoderTurn;
 import android.graphics.Color;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
@@ -65,6 +66,7 @@ import com.qualcomm.robotcore.hardware.SwitchableLight;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 @Autonomous(name = "Backstage Blue", group = "Sensor")
+@Disabled
 public class BackstageBlue extends LinearOpMode {
     NormalizedColorSensor leftSensor;
     NormalizedColorSensor rightSensor;
@@ -100,7 +102,7 @@ public class BackstageBlue extends LinearOpMode {
 
         // Wait for the start button to be pressed.
         waitForStart();
-        encoderDrive(SPEED, 26, 5);
+        // encoderDrive(SPEED, 28, 5);
         sleep(2500);
 
         // Get the normalized colors from the sensor
@@ -127,6 +129,7 @@ public class BackstageBlue extends LinearOpMode {
 
         telemetry.update();
 
+        /*
         if (hsv_right[0] > 200 && hsv_left[0] < 200) {
             encoderTurn(SPEED, 90, 5);
             encoderDrive(SPEED, 12, 5);
@@ -135,9 +138,6 @@ public class BackstageBlue extends LinearOpMode {
             encoderDrive(SPEED, -12, 5);
             encoderDrive(SPEED, -12, 5);
             encoderTurn(SPEED, 180, 5);
-            fingerServo.setPosition(0.2);
-            wristServo.setPosition(0.5);
-            encoderDrive(SPEED, -1, 5);
         }
         if (hsv_right[0] < 200 && hsv_left[0] > 200) {
             encoderDrive(SPEED, 12, 5);
@@ -146,8 +146,6 @@ public class BackstageBlue extends LinearOpMode {
             encoderDrive(SPEED, 12, 5);
             encoderDrive(SPEED, 12, 5);
             encoderDrive(SPEED, 12, 5);
-            wristServo.setPosition(0.5);
-            encoderDrive(SPEED, -1, 5);
         }
         if (hsv_right[0] < 200 && hsv_left[0] < 200) {
             encoderDrive(SPEED, 6, 5);
@@ -155,9 +153,7 @@ public class BackstageBlue extends LinearOpMode {
             encoderTurn(SPEED, -90, 5);
             encoderDrive(SPEED, 38, 5);
             encoderDrive(SPEED, -5, 5);
-            fingerServo.setPosition(0.2);
-            wristServo.setPosition(.5);
-            encoderDrive(SPEED, -4, 5);
         }
+        */
     }
 }
