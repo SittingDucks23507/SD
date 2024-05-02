@@ -159,7 +159,7 @@ public class AndrewDrive extends LinearOpMode {
             // Output the safe vales to the motor drives.
             leftDrive.setPower(left * .75);
             rightDrive.setPower(right * .75);
-            launchMotor.setPower(launch ? (.75/2) : 0);
+            launchMotor.setPower(launch ? 1 : 0);
             armMotor.setPower(arm * .5);
 
             // Move Servos
