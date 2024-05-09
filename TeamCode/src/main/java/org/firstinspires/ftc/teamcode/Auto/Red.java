@@ -34,6 +34,7 @@ import static org.firstinspires.ftc.teamcode.Auto.MoveByEncoder.encoderTurn;
 
 import android.graphics.Color;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
@@ -63,7 +64,7 @@ import com.qualcomm.robotcore.hardware.SwitchableLight;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Red", group = "Sensor")
+@Autonomous(name = "Red", group = "Sensor")
 public class Red extends LinearOpMode {
     NormalizedColorSensor leftSensor;
     NormalizedColorSensor rightSensor;
